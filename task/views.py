@@ -3,6 +3,7 @@ from django.views.generic import View
 from task.models import Task
 from task.forms import RegistrationForm, LoginForm
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 
@@ -27,10 +28,11 @@ class TaskAddView(View):
 
     def post(self, request, *args, **kwargs):
         # print(request.POST)
-        username = request.POST.get('username')
+        username = request.user
         task = request.POST.get('task')
         Task.objects.create(user=username, task_name=task)
-        return render(request, "add_task.html")
+        # return render(request, "add_task.html")
+        return redirect('todo-all')
 
 
 class TaskListView(View):
@@ -73,3 +75,15 @@ class LoginView(View):
     def get(self, request, *args, **kwargs):
         form = LoginForm()
         return render(request, 'signin.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            uname = form.cleaned_data.get('username')
+            pwd = form.cleaned_data.get('password')
+            usr = authenticate(request, username=uname, password=pwd)
+            if usr:
+                login(request, usr)
+                return redirect('todo-all')
+            else:
+                return render(request, 'signin.html', {'form': form})
