@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>add task</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <style>
+      .container-fluid {
+        background-color: #ffdee9;
+        background-image: linear-gradient(0deg, #ffdee9 0%, #b5fffc 100%);
+      }
+      .row {
+        width: 100vw;
+        height: 100vh;
+      }
+      .textbox {
+        margin-bottom: 1rem;
+      }
+      /* textarea {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 100%;
+      } */
+    </style>
+  </head>
+  <body>
+    <!-- ========== container fluid start here ========== -->
+    <div class="container-fluid d-flex">
+      <!-- ========== row starts ========== -->
+      <div class="row d-flex align-items-center justify-content-center">
+        <!-- ========== column1 starts here ========== -->
+        <div class="col-lg-3 col-md-2 col-sm-1 col-0"></div>
+        <!-- ========== column1 ended ========== -->
+        <!-- ========== column2 starts here ========== -->
+        <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+          <!-- Card starts here -->
+          <div class="card">
+            <div class="card-header d-flex justify-content-center">
+              <h2>Add Your Task</h2>
+            </div>
+            <!-- Card body starts here -->
+            <div class="card-body d-flex flex-column">
+              <form action="" method="post">
+                {%csrf_token%}
+                <div>
+                  <input
+                    type="text"
+                    class="form-control textbox"
+                    placeholder="User"
+                    name="username"
+                    required
+                  />
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    class="form-control textbox"
+                    placeholder="Task"
+                    name="task"
+                    required
+                  />
+                </div>
+                <!-- <div>
+                  <textarea name="" id="" cols="30" rows="10" class="textbox" placeholder="Task" required></textarea>
+                </div> -->
+                <div class="d-flex justify-content-center">
+                  <input type="submit" value="Add" class="btn btn-info" />
+                </div>
+              </form>
+            </div>
+            <!-- card body ended -->
+          </div>
+          <!-- Card ended -->
+        </div>
+        <!-- ========== column2 ended ========== -->
+        <!-- ========== column3 starts here ========== -->
+        <div class="col-lg-3 col-md-2 col-sm-1 col-0"></div>
+        <!-- column3 ended -->
+      </div>
+      <!-- ========== row ended ========== -->
+    </div>
+    <!-- ========== container fluid ended ========== -->
+  </body>
+</html>
