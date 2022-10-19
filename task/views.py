@@ -37,7 +37,8 @@ class TaskAddView(View):
 
 class TaskListView(View):
     def get(self, request, *args, **kwargs):
-        qs = Task.objects.all()
+        # qs = Task.objects.all()
+        qs = request.user.task_set.all()
         return render(request, "task_list.html", {'todos': qs})
 
 
@@ -87,3 +88,9 @@ class LoginView(View):
                 return redirect('todo-all')
             else:
                 return render(request, 'signin.html', {'form': form})
+
+
+# function based view
+def signout_view(request, *args, **kwargs):
+    logout(request)
+    return redirect('todo-signin')

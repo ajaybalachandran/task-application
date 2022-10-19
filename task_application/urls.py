@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from task.views import IndexView, LoginView, RegistrationView, SignupView, TaskAddView, TaskListView, TaskDetailView, TaskDeleteView, RegistrationView, LoginView
+from task.views import IndexView, LoginView, RegistrationView, SignupView, TaskAddView, TaskListView, TaskDetailView, TaskDeleteView, RegistrationView, LoginView, signout_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +28,8 @@ urlpatterns = [
     path('todos/<int:id>/remove/', TaskDeleteView.as_view(), name="todo-delete"),
     path('accounts/register/', RegistrationView.as_view(),
          name='todo-registration'),
-    path('signin/', LoginView.as_view(), name='todo-signin')
+    path('signin/', LoginView.as_view(), name='todo-signin'),
+    path('signout/', signout_view, name='todo-signout'),
 
 
 ]
