@@ -28,7 +28,7 @@ urlpatterns = [
     path('todos/<int:id>/remove/', TaskDeleteView.as_view(), name="todo-delete"),
     path('accounts/register/', RegistrationView.as_view(),
          name='todo-registration'),
-    path('signin/', LoginView.as_view(), name='todo-signin'),
+    path('', LoginView.as_view(), name='todo-signin'),
     path('signout/', signout_view, name='todo-signout'),
 
 

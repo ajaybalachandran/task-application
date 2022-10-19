@@ -38,8 +38,11 @@ class TaskAddView(View):
 class TaskListView(View):
     def get(self, request, *args, **kwargs):
         # qs = Task.objects.all()
-        qs = request.user.task_set.all()
-        return render(request, "task_list.html", {'todos': qs})
+        if request.user.is_authenticated:
+            qs = request.user.task_set.all()
+            return render(request, "task_list.html", {'todos': qs})
+        else:
+            return redirect("todo-signin")
 
 
 class TaskDetailView(View):
