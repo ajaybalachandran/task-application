@@ -4,6 +4,7 @@ from task.models import Task
 from task.forms import RegistrationForm, LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 # Create your views here.
 
 
@@ -32,6 +33,7 @@ class TaskAddView(View):
         task = request.POST.get('task')
         Task.objects.create(user=username, task_name=task)
         # return render(request, "add_task.html")
+        messages.success(request, "task has been created")
         return redirect('todo-all')
 
 
@@ -57,6 +59,7 @@ class TaskDeleteView(View):
         id = kwargs.get('id')
         task = Task.objects.get(id=id)
         task.delete()
+        messages.success(request, "task deleted")
         return redirect("todo-all")
 
 
@@ -70,8 +73,10 @@ class RegistrationView(View):
         if form.is_valid():
             User.objects.create_user(**form.cleaned_data)
             # form.save()
-            return redirect('todo-all')
+            messages.success(request, "account created")
+            return redirect('todo-signin')
         else:
+            messages.error(request, "registration failed")
             return render(request, 'registration.html', {'form': form})
 
 
@@ -90,6 +95,7 @@ class LoginView(View):
                 login(request, usr)
                 return redirect('todo-all')
             else:
+                messages.error(request, "invalid credentials")
                 return render(request, 'signin.html', {'form': form})
 
 

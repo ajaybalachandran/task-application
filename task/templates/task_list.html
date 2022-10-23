@@ -1,39 +1,63 @@
-{%extends 'base.html'%} {%block body_block%}
+{%extends 'base.html'%} 
+{%block body_block%}
 <div class="container">
+  <h2>{{request.user}}</h2>
   <div class="row">
     <div class="col-2"></div>
     <div class="col-8">
-      <h3>{{request.user}}</h3>
-      <table class="table">
-        <tr>
-          <th>id</th>
-          <th>task_name</th>
-          <th>user</th>
-          <th>created_date</th>
-          <th>status</th>
-          <th>Action</th>
-        </tr>
-        {%for task in todos%}
-        <tr>
-          <td>{{task.id}}</td>
-          <td>{{task.task_name}}</td>
-          <td>{{task.user}}</td>
-          <td>{{task.created_date}}</td>
-          <td>{{task.status}}</td>
-          <td>
-            <a href="{%url 'todo-detail' task.id%}" class="btn btn-info"
-              >Detail</a
-            >
-            <a href="" class="btn btn-warning">Edit</a>
-            <a href="{%url 'todo-delete' task.id%}" class="btn btn-danger"
-              >Delete</a
-            >
-          </td>
-        </tr>
+      {%if messages%}
+        {%for msg in messages%}
+          {% if msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{msg}}</strong> You should check in on some of those fields below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+          {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>{{msg}}</strong> You should check in on some of those fields below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
         {%endfor%}
-      </table>
+      {%endif%}
     </div>
     <div class="col-2"></div>
+  </div>
+    <div class="row">
+      <div class="col-2"></div>
+      <div class="col-8">
+        <table class="table">
+          <tr>
+            <th>id</th>
+            <th>task_name</th>
+            <th>user</th>
+            <th>created_date</th>
+            <th>status</th>
+            <th>Action</th>
+          </tr>
+          {%for task in todos%}
+          <tr>
+            <td>{{task.id}}</td>
+            <td>{{task.task_name}}</td>
+            <td>{{task.user}}</td>
+            <td>{{task.created_date}}</td>
+            <td>{{task.status}}</td>
+            <td>
+              <a href="{%url 'todo-detail' task.id%}" class="btn btn-info"
+                >Detail</a
+              >
+              <a href="" class="btn btn-warning">Edit</a>
+              <a href="{%url 'todo-delete' task.id%}" class="btn btn-danger"
+                >Delete</a
+              >
+            </td>
+          </tr>
+          {%endfor%}
+        </table>
+      </div>
+      <div class="col-2"></div>
+    </div>
   </div>
 </div>
 {%endblock%}
