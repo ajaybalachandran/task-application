@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from task.models import Task
 
 
 class RegistrationForm(forms.ModelForm):
@@ -21,3 +22,10 @@ class LoginForm(forms.Form):
         widget=forms.TextInput(attrs={"class": "form-control border border-primary", "placeholder": "Enter Username"}))
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={"class": "form-control border border-primary",  "placeholder": "Enter Password"}))
+
+
+class TaskUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['task_name', 'status']
+        

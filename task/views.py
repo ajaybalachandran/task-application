@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View
+from django.views.generic import View, ListView, DetailView, UpdateView
 from task.models import Task
-from task.forms import RegistrationForm, LoginForm
+from task.forms import RegistrationForm, LoginForm, TaskUpdateForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.utils.decorators import method_decorator
+from django.urls import reverse_lazy
 # Create your views here.
 
 
@@ -49,22 +50,36 @@ class TaskAddView(View):
 
 
 @method_decorator(sigin_required, name="dispatch")
-class TaskListView(View):
-    def get(self, request, *args, **kwargs):
-        # qs = Task.objects.all()
-        # if request.user.is_authenticated:
-        qs = request.user.task_set.all()
-        return render(request, "task_list.html", {'todos': qs})
-        # else:
-            # return redirect("todo-signin")
+class TaskListView(ListView):
+    model = Task
+    template_name = "task_list.html"
+    context_object_name = "todos"
+    # filtering only todos of logined user
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user)
+
+    '''when inherit from View'''
+    # def get(self, request, *args, **kwargs):
+    #     # qs = Task.objects.all()
+    #     # if request.user.is_authenticated:
+    #     qs = request.user.task_set.all()
+    #     return render(request, "task_list.html", {'todos': qs})
+    #     # else:
+    #         # return redirect("todo-signin")
 
 
 @method_decorator(sigin_required, name="dispatch")
-class TaskDetailView(View):
-    def get(self, request, *args, **kwargs):
-        id = kwargs.get('id')
-        task = Task.objects.get(id=id)
-        return render(request, "task_details.html", {"todo": task})
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = "task_details.html"
+    context_object_name = "todo"
+    pk_url_kwarg = "id"
+
+    '''when inherit from View'''
+    # def get(self, request, *args, **kwargs):
+    #     id = kwargs.get('id')
+    #     task = Task.objects.get(id=id)
+    #     return render(request, "task_details.html", {"todo": task})
 
 
 @method_decorator(sigin_required, name="dispatch")
@@ -118,3 +133,12 @@ class LoginView(View):
 def signout_view(request, *args, **kwargs):
     logout(request)
     return redirect('todo-signin')
+
+
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    form_class = TaskUpdateForm
+    template_name = "todo_update.html"
+    pk_url_kwarg = "id"
+    success_url = reverse_lazy("todo-all")
