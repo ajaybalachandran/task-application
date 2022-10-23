@@ -5,8 +5,18 @@ from task.forms import RegistrationForm, LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 # Create your views here.
 
+
+def sigin_required(fn):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, "You must login")
+            return redirect('todo-signin')
+        else:
+            return fn (request, *args, **kwargs)
+    return wrapper
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
@@ -23,6 +33,7 @@ class SignupView(View):
         return render(request, "signup.html")
 
 
+@method_decorator(sigin_required, name="dispatch")
 class TaskAddView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "add_task.html")
@@ -37,16 +48,18 @@ class TaskAddView(View):
         return redirect('todo-all')
 
 
+@method_decorator(sigin_required, name="dispatch")
 class TaskListView(View):
     def get(self, request, *args, **kwargs):
         # qs = Task.objects.all()
-        if request.user.is_authenticated:
-            qs = request.user.task_set.all()
-            return render(request, "task_list.html", {'todos': qs})
-        else:
-            return redirect("todo-signin")
+        # if request.user.is_authenticated:
+        qs = request.user.task_set.all()
+        return render(request, "task_list.html", {'todos': qs})
+        # else:
+            # return redirect("todo-signin")
 
 
+@method_decorator(sigin_required, name="dispatch")
 class TaskDetailView(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.get('id')
@@ -54,6 +67,7 @@ class TaskDetailView(View):
         return render(request, "task_details.html", {"todo": task})
 
 
+@method_decorator(sigin_required, name="dispatch")
 class TaskDeleteView(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.get('id')
@@ -69,7 +83,7 @@ class RegistrationView(View):
         return render(request, 'registration.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = RegistrationForm(data=request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
             User.objects.create_user(**form.cleaned_data)
             # form.save()
@@ -100,6 +114,7 @@ class LoginView(View):
 
 
 # function based view
+@sigin_required
 def signout_view(request, *args, **kwargs):
     logout(request)
     return redirect('todo-signin')
